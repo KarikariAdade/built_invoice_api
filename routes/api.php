@@ -1,0 +1,39 @@
+<?php
+
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\InvoiceController;
+use App\Http\Controllers\API\ProductController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+});
+
+Route::middleware(['api'])->group(function () {
+    Route::prefix('customers')->controller(CustomerController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('store', 'store');
+        Route::get('details/{id}', 'details');
+        Route::put('update/{id}', 'update');
+        Route::delete('delete/{id}', 'delete');
+    });
+
+    Route::prefix('products')->controller(ProductController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('store', 'store');
+        Route::get('details/{id}', 'details');
+        Route::put('update/{id}', 'update');
+        Route::delete('delete/{id}', 'delete');
+    });
+
+    Route::prefix('invoice')->controller(InvoiceController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('store', 'store');
+        Route::get('details/{id}', 'details');
+        Route::put('update/{id}', 'update');
+        Route::delete('delete/{id}', 'delete');
+    });
+});
