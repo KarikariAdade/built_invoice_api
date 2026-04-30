@@ -3,7 +3,6 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\InvoiceController;
-use App\Http\Controllers\API\InvoiceItemController;
 use App\Http\Controllers\API\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('password/forgot', [AuthController::class, 'forgotPassword']);
+    Route::post('password/reset', [AuthController::class, 'resetPassword']);
 });
 
 Route::middleware(['api'])->group(function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\AppServices;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -18,7 +19,31 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::query()->where('created_by', auth()->guard('api')->user()->id)->paginate(15);
+        $data = request()->only(['from', 'to']);
+
+        $validator = Validator::make($data, [
+            'from' => 'nullable|date',
+            'to' => 'nullable|date|after:from'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->appServices->generateResponse($validator->errors()->first(), [], 400, 'error');
+        }
+
+        $dates = [
+            'start_date' => !empty($data['from']) ? Carbon::parse($data['from'])->startOfDay() : now()->copy()->startOfYear()->startOfDay(),
+            'end_date' => !empty($data['to']) ? Carbon::parse($data['to'])->endOfDay() : now()->endOfDay()
+        ];
+
+        $products = Product::query()
+            ->where('created_by', auth()->guard('api')->user()->id)
+            ->when($dates['start_date'], function ($query) use ($data, $dates) {
+                return $query->where('created_at', '>=', $dates['start_date']);
+            })
+            ->when($dates['end_date'], function ($query) use ($data, $dates) {
+                return $query->where('created_at', '<=', $dates['end_date']);
+            })
+            ->paginate(15);
 
         if ($products->isEmpty()) {
             return $this->appServices->generateResponse('Products not found', [], 404, 'error');

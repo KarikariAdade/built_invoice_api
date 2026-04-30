@@ -34,7 +34,7 @@ class AppServices
         return ['message' => $data->getMessage(), 'file' => $data->getFile(), 'line' => $data->getLine()];
     }
 
-    public function runInvoiceItemProductChecks($items)
+    public function runInvoiceItemProductChecks($items): array
     {
         foreach ($items as $key => $item) {
 
@@ -72,7 +72,7 @@ class AppServices
         return $this->generateInvoiceNumber(++$int);
     }
 
-    public function processInvoiceData(Invoice $invoice, $items)
+    public function processInvoiceData(Invoice $invoice, $items): float|int
     {
         $invoice_item_collection = collect();
 
@@ -81,7 +81,9 @@ class AppServices
 
             $product = Product::query()->where('id', $item['product_id'])->first();
 
-            $product->update(['quantity' => $product->quantity - $item['quantity']]);
+            $remaining_product = $product->quantity - $item['quantity'];
+
+            $product->update(['quantity' => max($remaining_product, 0)]);
 
             $item_total += $item['unit_price'] * $item['quantity'];
 

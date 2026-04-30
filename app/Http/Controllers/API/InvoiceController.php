@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Services\AppServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,9 +20,39 @@ class InvoiceController extends Controller
         $this->appServices = $appServices;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $invoices = Invoice::query()->with('customer')->where('created_by', auth()->guard('api')->user()->id)->paginate(15);
+        $data = $request->only(['status', 'from', 'to']);
+
+        $status_codes = $this->appServices->convertEnumToArray(InvoiceStatus::cases());
+
+        $validator = Validator::make($data, [
+            'status' => 'nullable|in:'.implode(',', $status_codes),
+            'from' => 'nullable|date',
+            'to' => 'nullable|date|after:from'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->appServices->generateResponse($validator->errors()->first(), [], 400, 'error');
+        }
+
+        $dates = [
+            'start_date' => !empty($data['from']) ? Carbon::parse($data['from'])->startOfDay() : now()->copy()->startOfYear()->startOfDay(),
+            'end_date' => !empty($data['to']) ? Carbon::parse($data['to'])->endOfDay() : now()->endOfDay()
+        ];
+
+        $invoices = Invoice::query()
+            ->when(array_key_exists('status', $data) && $data['status'] !== null, function ($query) use ($data) {
+                return $query->where('status', InvoiceStatus::from($data['status']));
+            })
+            ->when($dates['start_date'], function ($query) use ($data, $dates) {
+                return $query->where('created_at', '>=', $dates['start_date']);
+            })
+            ->when($dates['end_date'], function ($query) use ($data, $dates) {
+                return $query->where('created_at', '<=', $dates['end_date']);
+            })
+            ->with('customer')->where('created_by', auth()->guard('api')->user()->id)
+            ->paginate(15);
 
         if ($invoices->isEmpty()) {
             return $this->appServices->generateResponse('Invoices not found', [], 404, 'error');
