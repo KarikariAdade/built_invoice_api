@@ -4,17 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Product extends Model
 {
     protected $guarded = ['id'];
-
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class, 'customer_id', 'id');
-    }
 
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+
 }

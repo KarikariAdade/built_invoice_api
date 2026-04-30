@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class, 'created_by')->index()->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->string('address')->nullable();
+            $table->double('unit_price');
+            $table->integer('quantity');
             $table->text('description')->nullable();
+            $table->foreignIdFor(\App\Models\User::class, 'created_by')->index()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('products');
     }
 };
