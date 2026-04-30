@@ -25,9 +25,9 @@ Route::middleware(['api'])->group(function () {
     Route::prefix('products')->controller(ProductController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('store', 'store');
-        Route::get('details/{id}', 'details');
-        Route::put('update/{id}', 'update');
-        Route::delete('delete/{id}', 'delete');
+        Route::get('details/{product}', 'details');
+        Route::put('update/{product}', 'update');
+        Route::delete('delete/{product}', 'delete');
     });
 
     Route::prefix('invoice')->controller(InvoiceController::class)->group(function () {
