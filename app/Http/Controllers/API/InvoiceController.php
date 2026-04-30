@@ -111,6 +111,70 @@ class InvoiceController extends Controller
 
     }
 
+    public function update(Request $request, $invoice_number)
+    {
+        $invoice = Invoice::query()->where('invoice_number', $invoice_number)
+            ->where('created_by', auth()->guard('api')->user()->id)->first();
+
+        if ($invoice === null) {
+            return $this->appServices->generateResponse('Invoice not found', [], 404, 'error');
+        }
+
+        if ($invoice->status !== InvoiceStatus::DRAFT->value) {
+            return $this->appServices->generateResponse('Invoice cannot be updated. Only draft can be updated', [], 400, 'error');
+        }
+
+        $data = $request->only(['customer_id', 'issue_date', 'due_date', 'items', 'description']);
+
+        $validate = Validator::make($data, $this->validateData());
+
+        if ($validate->fails()) {
+            return $this->appServices->generateResponse($validate->errors()->first(), [], 400, 'error');
+        }
+
+        $customer = Customer::query()->where('id', $data['customer_id'])
+            ->where('created_by', auth()->guard('api')->user()->id)->exists();
+
+        if (!$customer) {
+            return $this->appServices->generateResponse('Customer not found', [], 404, 'error');
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            $data['invoice_number'] = $invoice->invoice_number;
+
+            $this->appServices->reverseInvoiceItemsData($invoice);
+
+            $invoice_items = $this->appServices->runInvoiceItemProductChecks($data['items']);
+
+            if ($invoice_items['type'] === 'error') {
+                return $this->appServices->generateResponse($invoice_items['message'], [], 400, 'error');
+            }
+
+            $invoice_items = $invoice_items['data'];
+
+            $invoice->update($this->dumpInvoice($data));
+
+            $total_amount = $this->appServices->processInvoiceData($invoice, $invoice_items);
+
+            $invoice->update(['total_amount' => $total_amount]);
+
+            DB::commit();
+
+            return $this->appServices->generateResponse('Invoice updated successfully', $invoice);
+
+        } catch (\Exception $exception) {
+
+            DB::rollBack();
+
+            $this->appServices->generateLog('invoice', ':: INVOICE UPDATE ERROR ::', $this->appServices->generateLogData($exception));
+
+            return $this->appServices->generateResponse('An error occurred while trying to update an invoice. Kindly try again', [], 500, 'error');
+        }
+    }
+
     public function details($invoice_number)
     {
         $invoice = Invoice::query()->with(['customer', 'invoiceItems'])
@@ -124,7 +188,6 @@ class InvoiceController extends Controller
 
         return $this->appServices->generateResponse('Invoice retrieved successfully', $invoice);
     }
-
 
     public function changeStatus(Request $request, $invoice_number)
     {
@@ -216,7 +279,7 @@ class InvoiceController extends Controller
     {
         return [
             'customer_id' => $data['customer_id'],
-            'invoice_number' => $this->appServices->generateInvoiceNumber(),
+            'invoice_number' => $data['invoice_number'] ?? $this->appServices->generateInvoiceNumber(),
             'issue_date' => $data['issue_date'],
             'due_date' => $data['due_date'],
             'description' => $data['description'] ?? null,

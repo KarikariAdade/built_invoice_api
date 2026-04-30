@@ -34,9 +34,9 @@ Route::middleware(['api'])->group(function () {
     Route::prefix('invoice')->controller(InvoiceController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('store', 'store');
-        Route::get('details/{id}', 'details');
-        Route::put('update/{id}', 'update');
+        Route::get('details/{invoice_number}', 'details');
+        Route::put('update/{invoice_number}', 'update');
         Route::put('change/status/{invoice_number}', 'changeStatus');
-        Route::delete('delete/{id}', 'delete');
+        Route::delete('delete/{invoice_number}', 'delete');
     });
 });

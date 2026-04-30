@@ -105,6 +105,25 @@ class AppServices
 
     }
 
+    public function reverseInvoiceItemsData(Invoice $invoice)
+    {
+
+        if (!empty($invoice->invoiceItems)) {
+
+            foreach ($invoice->invoiceItems as $item) {
+
+                $product = Product::query()->where('id', $item->product_id)->first();
+
+                $product->update(['quantity' => $product->quantity + $item->quantity]);
+
+            }
+
+        }
+
+        DB::table('invoice_items')->where('invoice_id', $invoice->id)->delete();
+
+    }
+
     public function convertEnumToArray($cases): array
     {
         $hook_status = array_values($cases);
