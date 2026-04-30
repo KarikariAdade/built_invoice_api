@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Customer::class, 'customer_id')->index()->constrained()->cascadeOnDelete();
             $table->string('invoice_number')->unique();
             $table->date('issue_date');
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 10, 2)->nullable();
             $table->text('description')->nullable();
             $table->enum('status', \App\Constants\InvoiceStatus::cases())->default(\App\Constants\InvoiceStatus::DRAFT);
             $table->date('due_date');

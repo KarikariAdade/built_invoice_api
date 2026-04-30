@@ -13,6 +13,11 @@ class Invoice extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id')->with('product');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');

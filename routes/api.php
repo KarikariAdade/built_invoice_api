@@ -35,6 +35,7 @@ Route::middleware(['api'])->group(function () {
         Route::post('store', 'store');
         Route::get('details/{id}', 'details');
         Route::put('update/{id}', 'update');
+        Route::put('change/status/{invoice_number}', 'changeStatus');
         Route::delete('delete/{id}', 'delete');
     });
 });
