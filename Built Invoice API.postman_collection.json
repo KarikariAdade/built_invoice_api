@@ -1,0 +1,794 @@
+{
+  "info": {
+    "_postman_id": "7a0f4c7e-25e3-4a46-a6e0-add1b9133b5f",
+    "name": "Built Invoice API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12535483",
+    "_collection_link": "https://go.postman.co/collection/12535483-7a0f4c7e-25e3-4a46-a6e0-add1b9133b5f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Karikari Adade\",\r\n    \"email\": \"admin@afdmin.com\",\r\n    \"password\": \"@GodOverMoney0548\",\r\n    \"password_confirmation\": \"@GodOverMoney0548\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"@GodOverMoney0548\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@admin.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/password/forgot",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "password",
+                "forgot"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"otp\": \"788623\",\r\n    \"password\": \"@GodOverMoney0548\",\r\n    \"password_confirmation\": \"@GodOverMoney0548\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/password/reset",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "password",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Get Customers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/customers",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/customers/details/:customer",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "customers",
+                "details",
+                ":customer"
+              ],
+              "variable": [
+                {
+                  "key": "customer",
+                  "value": "1",
+                  "description": "ID of customer"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/customers/delete/:customer",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "customers",
+                "delete",
+                ":customer"
+              ],
+              "variable": [
+                {
+                  "key": "customer",
+                  "value": "1",
+                  "description": "ID of customer"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomFullName}}\", // required\r\n    \"email\": \"{{$randomEmail}}\", // required\r\n    \"phone\": \"{{$randomPhoneNumber}}\", // required\r\n    \"address\": \"{{$randomStreetAddress}}\", // nullable\r\n    \"description\": \"\" // nullable\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/customers/store",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "customers",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomFullName}}\", // required\r\n    \"email\": \"Tyrique73@gmail.com\", // required\r\n    \"phone\": \"{{$randomPhoneNumber}}\", // required\r\n    \"address\": \"{{$randomStreetAddress}}\",\r\n    \"description\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/customers/update/:customer",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "customers",
+                "update",
+                ":customer"
+              ],
+              "variable": [
+                {
+                  "key": "customer",
+                  "value": "1",
+                  "description": "ID of the customer"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get Products",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/products",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2026-02-10",
+                  "disabled": true
+                },
+                {
+                  "key": "to",
+                  "value": "2026-06-20",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/products/details/:product",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products",
+                "details",
+                ":product"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1",
+                  "description": "ID of PRODUCT"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/products/delete/:product",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products",
+                "delete",
+                ":product"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1",
+                  "description": "ID of product"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"test\", // required\r\n    \"unit_price\": \"asdf\", // required\r\n    \"quantity\": \"{{$randomInt}}\", // required\r\n    \"description\": {{$randomJobDescriptor}} // required\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/products/update/:product",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products",
+                "update",
+                ":product"
+              ],
+              "variable": [
+                {
+                  "key": "product",
+                  "value": "1",
+                  "description": "ID of product"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomProductName}}\", // required\r\n    \"unit_price\": \"100.31\", // required\r\n    \"quantity\": \"{{$randomInt}}\", // required\r\n    \"description\": \"{{$randomJobDescriptor}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/products/store",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Get Invoices",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/invoice?status=OVERDUE",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "invoice"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "OVERDUE"
+                },
+                {
+                  "key": "from",
+                  "value": "2026-03-10",
+                  "description": "yyyy-mm-dd",
+                  "disabled": true
+                },
+                {
+                  "key": "to",
+                  "value": "2026-03-11",
+                  "description": "yyyy-mm-dd",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Invoice Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"ISSUED\" // DRAFT, ISSUED, OVERDUE, CANCELLED\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/invoice/change/status/:invoice_number",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "invoice",
+                "change",
+                "status",
+                ":invoice_number"
+              ],
+              "variable": [
+                {
+                  "key": "invoice_number",
+                  "value": "INV000001",
+                  "description": "Invoice Number"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invoice Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/invoice/details/:invoice_number",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "invoice",
+                "details",
+                ":invoice_number"
+              ],
+              "variable": [
+                {
+                  "key": "invoice_number",
+                  "value": "INV000003",
+                  "description": "Invoice Number"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Invoice",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/products/delete/:invoice",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "products",
+                "delete",
+                ":invoice"
+              ],
+              "variable": [
+                {
+                  "key": "invoice",
+                  "value": "1",
+                  "description": "ID of Invoice"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Invoice",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 2,\r\n    \"issue_date\": \"2026-01-29\",\r\n    \"description\": \"\",\r\n    \"due_date\": \"2026-10-01\",\r\n    \"items\": [\r\n        {\r\n            \"product_id\": 2,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 44,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 3,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 20,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 2,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 20,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 4,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 20,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 3,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 20,\r\n            \"description\": \"\"\r\n        }\r\n    ]\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/invoice/update/:invoice_number",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "invoice",
+                "update",
+                ":invoice_number"
+              ],
+              "variable": [
+                {
+                  "key": "invoice_number",
+                  "value": "INV000003",
+                  "description": "Invoice Number"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Invoice",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_id\": 2, // required\r\n    \"issue_date\": \"2026-01-29\", // required\r\n    \"description\": \"\",\r\n    \"due_date\": \"2026-10-01\", // required\r\n    \"items\": [ // required\r\n        {\r\n            \"product_id\": 2,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 4,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 3,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 2,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 2,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 2,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 4,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 2,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"product_id\": 3,\r\n            \"unit_price\": 10.0,\r\n            \"quantity\": 2,\r\n            \"description\": \"\"\r\n        }\r\n    ]\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/invoice/store",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "invoice",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

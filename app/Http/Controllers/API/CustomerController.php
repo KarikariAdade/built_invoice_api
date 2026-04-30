@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Class CustomerController
+ *
+ * Handles customer-related operations such as fetching, creating, updating, and deleting customers.
+ *
+ * @package App\Http\Controllers\API
+ */
+
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
@@ -11,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Claims\Custom;
 
+
 class CustomerController extends Controller
 {
     private AppServices $appServices;
@@ -18,6 +27,7 @@ class CustomerController extends Controller
     public function __construct(AppServices $appServices) {
         $this->appServices = $appServices;
     }
+
 
     public function index()
     {
@@ -50,6 +60,7 @@ class CustomerController extends Controller
         return $this->appServices->generateResponse('Customers retrieved successfully', $customers);
     }
 
+
     public function store(Request $request)
     {
         $data = $request->only(['name', 'email', 'phone', 'address', 'description']);
@@ -79,6 +90,7 @@ class CustomerController extends Controller
 
         }
     }
+
 
     public function details(Customer $customer)
     {
@@ -122,6 +134,7 @@ class CustomerController extends Controller
 
         }
     }
+
 
     public function delete(Customer $customer)
     {

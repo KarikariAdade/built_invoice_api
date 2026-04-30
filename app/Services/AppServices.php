@@ -4,12 +4,18 @@ namespace App\Services;
 
 use App\Models\Invoice;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AppServices
 {
-    public function generateResponse($message, $data, $error_code = null, $type = null): \Illuminate\Http\JsonResponse
+    /**
+     * Generates a JSON response based on the provided parameters.
+
+     * @return JsonResponse The generated JSON response.
+     */
+    public function generateResponse($message, $data, $error_code = null, $type = null): JsonResponse
     {
         if ($type === 'error') {
             return response()->json([
@@ -24,6 +30,10 @@ class AppServices
         ]);
     }
 
+    /**
+     * Generates a log entry on the specified logging channel.
+     * @return void
+     */
     public function generateLog($channel, $header, $message): void
     {
         Log::channel($channel)->alert($header, $message);
@@ -34,6 +44,15 @@ class AppServices
         return ['message' => $data->getMessage(), 'file' => $data->getFile(), 'line' => $data->getLine()];
     }
 
+    /**
+     * Validates and processes invoice item products.
+     *
+     * This method iterates over the provided items and ensures the associated products exist
+     * and have sufficient stock to fulfill the requested quantity. It also assigns a default
+     * description to the item if it's missing.
+     *
+     * @return array A response array containing a type ('success' or 'error') and associated data or message.
+     */
     public function runInvoiceItemProductChecks($items): array
     {
         foreach ($items as $key => $item) {
@@ -58,6 +77,16 @@ class AppServices
         return ['type' => 'success', 'data' => $items];
     }
 
+    /**
+     * Generates a unique invoice number.
+     *
+     * Constructs a new invoice number based on the current count of invoices
+     * and a specified increment value. Ensures that the generated invoice
+     * number does not already exist in the database.
+     *
+     * @param int $int The increment value used to generate the invoice number (defaults to 1).
+     * @return string The unique invoice number.
+     */
     public function generateInvoiceNumber($int = 1): string
     {
         $batch = 'INV' . sprintf('%06d', Invoice::query()->count() + $int);
@@ -105,7 +134,15 @@ class AppServices
 
     }
 
-    public function reverseInvoiceItemsData(Invoice $invoice)
+    /**
+     * Reverses the associated invoice items data for a given invoice.
+     *
+     * Updates the product quantities by adding back the quantities from invoice items.
+     * Deletes all invoice items associated with the specified invoice from the database.
+     *
+     * @param Invoice $invoice The invoice object containing the items to reverse.
+     */
+    public function reverseInvoiceItemsData(Invoice $invoice): void
     {
 
         if (!empty($invoice->invoiceItems)) {
@@ -124,6 +161,13 @@ class AppServices
 
     }
 
+    /**
+     * Converts an array of enum cases into an array of their corresponding values.
+     *
+     * Iterates over the provided enum cases, extracts their values, and returns them in a sequential array.
+     *
+     * @return array The array of enum values extracted from the provided cases.
+     */
     public function convertEnumToArray($cases): array
     {
         $hook_status = array_values($cases);

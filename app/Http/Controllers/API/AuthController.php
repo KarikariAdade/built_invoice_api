@@ -1,17 +1,109 @@
 <?php
 
+/**
+ *
+ */
+
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Notifications\AuthenticationOtpNotification;
-use App\Services\AppServices;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use /**
+ * Base controller for the application.
+ *
+ * This controller serves as the foundation for other controllers
+ * in the application and provides common functionality
+ * shared across multiple controllers.
+ *
+ * Controllers extending this class can utilize methods defined here
+ * to streamline repetitive operations and maintain consistency.
+ *
+ * @package App\Http\Controllers
+ */
+    App\Http\Controllers\Controller;
+use /**
+ *
+ */
+    App\Models\User;
+use /**
+ *
+ */
+    App\Notifications\AuthenticationOtpNotification;
+use /**
+ *
+ */
+    App\Services\AppServices;
+use /**
+ * Class Illuminate\Http\Request
+ *
+ * Represents an HTTP request in a Laravel application.
+ * Provides methods for interacting with query parameters, input data, cookies, files, and headers.
+ * This class extends Symfony's HttpFoundation Request, adding Laravel-specific functionality.
+ *
+ * It handles:
+ * - Retrieving user input.
+ * - Working with uploaded files.
+ * - Input sanitation and validation.
+ * - Query string manipulation.
+ * - Retrieving and setting headers and cookies.
+ * - Determining request type, method, and path.
+ * - URI, session, and authentication-related operations.
+ *
+ * General Features:
+ * - Combines GET, POST, and other input streams.
+ * - Provides helper methods for easier request interaction.
+ * - Supports JSON and file inputs.
+ *
+ * Compatibility:
+ * - Fully compatible with Laravel's routing and middleware features.
+ * - Can be mocked or modified in tests for HTTP request handling scenarios.
+ */
+    Illuminate\Http\Request;
+use /**
+ *
+ */
+    Illuminate\Support\Carbon;
+use /**
+ *
+ */
+    Illuminate\Support\Facades\Auth;
+use /**
+ * Class DB
+ *
+ * Provides a facade for interacting with the database in a Laravel application.
+ * This class allows for the execution of raw queries, transactions, and various
+ * database operations using a fluent, expressive syntax.
+ *
+ * @see \Illuminate\Database\DatabaseManager
+ * @see \Illuminate\Database\Connection
+ * @see https://laravel.com/docs/database
+ */
+    Illuminate\Support\Facades\DB;
+use /**
+ * This class provides a facade for the Validator component in Laravel, which is used for
+ * validating data, enforcing business rules, and handling validation logic. It simplifies
+ * the process of performing validations by offering various utility methods to validate
+ * arrays, input fields, and other data structures.
+ *
+ * Facade for: \Illuminate\Validation\Factory
+ *
+ * Common Use Cases:
+ * - Validate request data in controllers.
+ * - Apply custom rules or callbacks for complex validation scenarios.
+ * - Retrieve validation rules for reusable functionality.
+ */
+    Illuminate\Support\Facades\Validator;
 
+/**
+ * This controller handles authentication-related processes in the application, including
+ * user registration, login, password reset, and OTP generation for password recovery.
+ * It utilizes Laravel's validation, authentication, and database transaction mechanisms
+ * to ensure secure and reliable operations.
+ *
+ * Main Functionalities:
+ * - Registering a new user and validating input data.
+ * - Authenticating users via email and password and generating API tokens.
+ * - Sending OTPs to aid in password recovery.
+ * - Resetting passwords securely using OTPs and validation rules.
+ */
 class AuthController extends Controller
 {
     private AppServices $appServices;

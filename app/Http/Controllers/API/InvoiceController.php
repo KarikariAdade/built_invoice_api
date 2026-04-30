@@ -61,6 +61,15 @@ class InvoiceController extends Controller
         return $this->appServices->generateResponse('Invoices retrieved successfully', $invoices);
     }
 
+    /**
+     * Handles the creation of a new invoice.
+     *
+     * This method receives request data, validates it, and checks if the specified customer exists.
+     * It performs product checks for invoice items, processes the invoice data, and calculates the total amount.
+     * The invoice creation process is wrapped within a database transaction to ensure atomicity.
+     * If the operation fails at any point, the transaction is rolled back, and an error response is generated.
+     *
+     */
     public function store(Request $request)
     {
         $data = $request->only(['customer_id', 'issue_date', 'due_date', 'items', 'description']);
@@ -111,6 +120,16 @@ class InvoiceController extends Controller
 
     }
 
+    /**
+     * Updates an existing invoice based on the provided invoice number and request data.
+     *
+     * The method verifies if the invoice exists and is in a draft status before allowing updates.
+     * It validates the request data against predefined validation rules and ensures the associated
+     * customer exists. If the validation passes, the invoice's items and total amount are updated
+     * within a database transaction. If an error occurs during the update process, the transaction
+     * is rolled back and an error response is returned.
+     *
+     */
     public function update(Request $request, $invoice_number)
     {
         $invoice = Invoice::query()->where('invoice_number', $invoice_number)
